@@ -1,0 +1,7 @@
+.tooltip {
+    opacity: 0;
+}
+
+.tab:hover .tooltip {
+    opacity: 1;
+}

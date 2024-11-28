@@ -1,0 +1,28 @@
+.panel_main {
+    flex: 1;
+    height: "100%";
+    background-color: white;
+    border-top-left-radius: 5%;
+    border-bottom-left-radius: 5%;
+    grid-column: 2;
+    overflow: hidden;
+}
+
+.effects {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.adjustments {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.adjustment_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

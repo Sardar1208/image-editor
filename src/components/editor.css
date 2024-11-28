@@ -1,0 +1,19 @@
+.editor_main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    grid-column: 1;
+    position: relative;
+}
+.editor_empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+.editor_controller {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+}

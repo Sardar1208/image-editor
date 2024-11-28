@@ -1,0 +1,15 @@
+#root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.main_grid {
+  background-color: #1f1f1f;
+  display: grid;
+  grid-template-columns: 70% 25%;
+  gap: 5%;
+  flex: 1;
+  height: 100%;
+}

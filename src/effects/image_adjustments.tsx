@@ -21,7 +21,7 @@ function tune_image(canvasRef: RefObject<HTMLCanvasElement | null>, imageState: 
 
     console.log("sequence: ", res.sequence);
 
-    for (let process of res.sequence) {
+    for (const process of res.sequence) {
         const value = getValueForAdjustmentType(process.operation, process.value);
         adjust_image(canvasRef, imageState, setImageState, process.operation, value, workerRef);
     }

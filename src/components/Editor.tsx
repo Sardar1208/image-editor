@@ -52,7 +52,7 @@ export default function Editor() {
                 <span style={{ fontSize: "25px", marginBottom: "10px" }}>Select an image and start editing</span>
                 <UploadButton onImageSelect={onImageSelect} />
             </div> : (
-                <div style={{ border: "5px solid red", width: "100%", height: "90%", margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }} ref={editorRef}>
+                <div style={{ border: "0px solid red", width: "100%", height: "90%", margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }} ref={editorRef}>
                     <canvas ref={canvasRef} style={{
                         border: "2px solid #000",
                     }}>

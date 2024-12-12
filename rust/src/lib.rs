@@ -226,13 +226,31 @@ pub fn batch_adjust(image_data: &mut [u8], sequence: &JsValue, values: &[f32]) {
             let value = values[idx];
             if let Some(string) = adjustment.as_string() {
                 match string.as_str() {
+                    "brightness" => {
+                        // Convert pixel to i16 for calculations
+                        let r = pixel[0] as i16;
+                        let g = pixel[1] as i16;
+                        let b = pixel[2] as i16;
+
+                        // Weighted luminance adjustment
+                        let luminance =
+                            (0.299 * r as f32 + 0.587 * g as f32 + 0.114 * b as f32) as i16;
+
+                        // Adjust each channel proportionally to the luminance
+                        pixel[0] =
+                            cmp::max(0, cmp::min(255, r + value as i16 * luminance / 255)) as u8;
+                        pixel[1] =
+                            cmp::max(0, cmp::min(255, g + value as i16 * luminance / 255)) as u8;
+                        pixel[2] =
+                            cmp::max(0, cmp::min(255, b + value as i16 * luminance / 255)) as u8;
+                    }
                     "contrast" => {
                         let contrast_factor =
                             ((259.0) * (value + 255.0)) / (255.0 * (259.0 - value));
 
                         for i in 0..3 {
-                            let value = pixel[i] as f32;
-                            let new_value = contrast_factor * (value - 128.0) + 128.0;
+                            let pixel_value = pixel[i] as f32;
+                            let new_value = contrast_factor * (pixel_value - 128.0) + 128.0;
                             // Clip to the 0–255 range and assign back to the pixel
                             pixel[i] = cmp::max(0, cmp::min(255, new_value.round() as i16)) as u8;
                         }
@@ -243,22 +261,22 @@ pub fn batch_adjust(image_data: &mut [u8], sequence: &JsValue, values: &[f32]) {
                             + 0.114 * (pixel[2] as f32);
 
                         for i in 0..3 {
-                            let value = pixel[i] as f32;
+                            let pixel_value = pixel[i] as f32;
                             // Adjust the saturation by scaling the distance from gray
-                            let new_value = gray + (value - gray) * (1.0 + value);
+                            let new_value = gray + (pixel_value - gray) * (1.0 + value);
                             // Clip to the 0–255 range
                             pixel[i] = new_value.clamp(0.0, 255.0).round() as u8;
                         }
                     }
                     "shadows" => {
                         for i in 0..3 {
-                            let value = pixel[i] as f32;
+                            let pixel_value = pixel[i] as f32;
 
                             // Brighten shadows for darker pixels
-                            let new_value = if value < 128.0 {
-                                (value + value * (128.0 - value)).clamp(0.0, 255.0)
+                            let new_value = if pixel_value < 128.0 {
+                                (pixel_value + value * (128.0 - pixel_value)).clamp(0.0, 255.0)
                             } else {
-                                value // Leave highlights unchanged
+                                pixel_value // Leave highlights unchanged
                             };
 
                             pixel[i] = new_value as u8;
@@ -275,7 +293,6 @@ pub fn batch_adjust(image_data: &mut [u8], sequence: &JsValue, values: &[f32]) {
                         let green_adjustment = value;
 
                         pixel[1] = ((pixel[1] as f32 + green_adjustment).clamp(0.0, 255.0)) as u8;
-
                     }
                     "vibrance" => {
                         let r = pixel[0] as f32;
@@ -285,27 +302,29 @@ pub fn batch_adjust(image_data: &mut [u8], sequence: &JsValue, values: &[f32]) {
                         // Calculate the maximum intensity
                         let max = r.max(g).max(b);
 
-                        // Apply vibrance adjustment only to less saturated colors
+                        // Apply vibrance adjustment to less saturated colors
                         for i in 0..3 {
-                            let delta = max - pixel[i] as f32;
+                            let channel = pixel[i] as f32;
+                            let delta = max - channel;
+
                             if delta > 0.0 {
-                                let adjustment = delta * value / 255.0; // Scale adjustment
-                                pixel[i] = ((pixel[i] as f32 + adjustment).clamp(0.0, 255.0)) as u8;
+                                let adjustment = delta * value / 255.0; // Scale adjustment by vibrance factor
+                                pixel[i] = ((channel + adjustment).clamp(0.0, 255.0)) as u8;
                             }
                         }
                     }
                     "highlights" => {
                         for i in 0..3 {
-                            let value = pixel[i] as f32;
+                            let pixel_value = pixel[i] as f32;
 
                             // Apply highlights adjustment only to bright pixels
-                            let factor = if value > 128.0 {
+                            let factor = if pixel_value > 128.0 {
                                 1.0 + value / 100.0
                             } else {
                                 1.0
                             };
 
-                            pixel[i] = ((value * factor).clamp(0.0, 255.0)) as u8;
+                            pixel[i] = ((pixel_value * factor).clamp(0.0, 255.0)) as u8;
                         }
                     }
                     _ => continue,

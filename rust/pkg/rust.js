@@ -267,9 +267,6 @@ function passArrayF32ToWasm0(arg, malloc) {
  * @param {Float32Array} values
  */
 export function batch_adjust(image_data, sequence, values) {
-    console.log("imageLenght: ", image_data.length);
-    console.log("seq: ", sequence);
-    console.log("value: ", values);
     try {
         var ptr0 = passArray8ToWasm0(image_data, wasm.__wbindgen_malloc);
         var len0 = WASM_VECTOR_LEN;

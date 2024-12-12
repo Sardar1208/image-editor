@@ -3,6 +3,7 @@ import { getAdjustmentValue } from "../utils/tune_image_sm";
 import { AdjustmentType } from "../types/T_ProcessTypes";
 import { useSelector } from "react-redux";
 import { IRootState } from "../store";
+import { colors } from "../constants/theme";
 
 interface SliderProps {
   min?: number;
@@ -157,7 +158,7 @@ function PropertyWithSlider({
               }}
             ></div>
 
-            {/* Divisions */}
+            {/* Divisions
             {divisions.map((division, index) => {
               const divisionPercentage = ((division - min) / (max - min)) * 100;
               return (
@@ -169,7 +170,7 @@ function PropertyWithSlider({
                   }}
                 />
               );
-            })}
+            })} */}
           </div>
 
           {/* Slider Handle */}
@@ -192,6 +193,9 @@ const styles: { [key: string]: React.CSSProperties } = {
     justifyContent: "space-between",
     width: "100%",
     marginBottom: "10px",
+    color: colors.textPrimary,
+    fontWeight: "bolder",
+    letterSpacing: "1px",
   },
   sliderContainer: {
     width: "100%",
@@ -207,7 +211,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     top: "50%",
     width: "18px",
     height: "18px",
-    backgroundColor: "#024CAA",
+    backgroundColor: colors.primary,
     borderRadius: "50%",
     transform: "translate(-50%, -50%)",
     cursor: "pointer",
@@ -218,14 +222,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     left: 0,
     width: "100%",
     height: "8px",
-    background: "#e0e0e0",
+    background: colors.primaryLight,
     transform: "translateY(-50%)",
     overflow: "hidden",
+    borderRadius: "4px"
   },
   filledTrack: {
     position: "absolute",
     height: "100%",
-    background: "#4CC9FE",
+    background: colors.primary,
     borderRadius: "3px",
   },
   divisions: {

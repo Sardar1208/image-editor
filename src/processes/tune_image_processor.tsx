@@ -5,7 +5,7 @@ import { ImageState } from "../types/T_ImageState.js";
 import store from "../store.js";
 import { updateAdjustment } from "../reducers/tuneImageReducer.js";
 import { clearCurrentImage, getImageDataforOP, setCurrentImage } from "../utils/image_state_manager.js";
-import { AdjustmentType } from "../types/T_ProcessTypes.js";
+import { AdjustmentType, M_AdjustmentType } from "../types/T_ProcessTypes.js";
 
 function useWorker() {
   const workerRef = useRef<any>(null);
@@ -45,7 +45,8 @@ function tune_image(
 
   seq.map((item) => {
     adjustments.push(item.operation);
-    values.push(item.value);
+    const adjustedValue = getValueForAdjustmentType(item.operation, item.value)
+    values.push(adjustedValue);
   });
 
   adjust_image(canvasRef, imageState, setState, adjustments, values, workerRef);
@@ -91,11 +92,26 @@ function getValueForAdjustmentType(
   rawValue: number
 ) {
   switch (operation) {
-    case "shadow": {
-      return rawValue * 0.1;
+    case M_AdjustmentType.Shadows: {
+      return rawValue * -0.1;
     }
-    case "saturation": {
-      return 0.5 + (rawValue - 50) / 100;
+    case M_AdjustmentType.Vibrance: {
+      return rawValue * 10;
+    }
+    case M_AdjustmentType.Brightness: {
+      return rawValue * 5;
+    }
+    case M_AdjustmentType.Contrast: {
+      return rawValue * 5;
+    }
+    case M_AdjustmentType.Saturation: {
+      return (rawValue / 10) * 0.8;
+    }
+    case M_AdjustmentType.Temperature: {
+      return rawValue * 5;
+    }
+    case M_AdjustmentType.Tint: {
+      return rawValue * 5;
     }
     default: {
       return rawValue;

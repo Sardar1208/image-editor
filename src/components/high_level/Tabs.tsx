@@ -3,6 +3,7 @@ import "./tabs.css";
 import { ImageContext } from "../../App";
 import { applyCurrentImage } from "../../utils/image_state_manager";
 import Modal from "../Modal";
+import { colors } from "../../constants/theme";
 
 interface Tab {
   label: string;
@@ -30,56 +31,19 @@ const VerticalTabs: React.FC<{ tabs: Tab[] }> = ({ tabs }) => {
 
   return (
     <div className="parent">
-      {/* Content */}
-      <div className="content">
-        {tabs[selectedTab].content}
-
-        {imageState?.state.currentImage && (
-          <div className="commit-panel">
-            <button
-              style={{
-                backgroundColor: "#4caf50",
-                transition: "background-color 0.3s",
-              }}
-              onClick={() => setModalState(true)}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#45a049")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#4caf50")}
-            >
-              Apply
-            </button>
-            <button
-              style={{
-                backgroundColor: "#f44336",
-                transition: "background-color 0.3s",
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#e53935")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#f44336")}
-            >
-              Revert
-            </button>
-          </div>
-        )}
-      </div>
-
-      {modalState ? (
-        <Modal closeModal={closeModal} onApply={applyChanges} />
-      ) : null}
-
       {/* Tabs */}
-      <div className="tab-group">
+      <div className="tab-group" style={{ background: colors.secondary }}>
         {tabs.map((tab, index) => (
           <div
             key={index}
             onClick={() => setSelectedTab(index)}
-            className="tab"
+            className={`tab ${selectedTab === index ? "active-tab" : ""}`}
             style={{
+              color:
+                selectedTab === index ? colors.secondary : colors.textPrimary,
               backgroundColor:
-                selectedTab === index ? "#3B82F6" : "transparent",
-              color: selectedTab === index ? "#FFFFFF" : "#A0AEC0",
-              boxShadow:
-                selectedTab === index
-                  ? "0 4px 6px rgba(59, 130, 246, 0.3)"
-                  : "none",
+                selectedTab === index ? colors.primary : "transparent",
+                boxShadow: selectedTab === index ? `0 4px 6px ${colors.primary}` : "",
             }}
           >
             {tab.icon}
@@ -87,6 +51,33 @@ const VerticalTabs: React.FC<{ tabs: Tab[] }> = ({ tabs }) => {
           </div>
         ))}
       </div>
+
+      {/* Content */}
+      <div
+        className="content-container"
+        style={{
+          scrollbarColor: `${colors.primary} transparent`,
+          backgroundColor: colors.secondary,
+        }}
+      >
+        <div className="content">{tabs[selectedTab].content}</div>
+
+        {imageState?.state.currentImage && (
+          <div className="commit-panel">
+            <button
+              className="apply-button"
+              onClick={() => setModalState(true)}
+            >
+              Apply
+            </button>
+            <button className="revert-button">Revert</button>
+          </div>
+        )}
+      </div>
+
+      {modalState ? (
+        <Modal closeModal={closeModal} onApply={applyChanges} />
+      ) : null}
     </div>
   );
 };

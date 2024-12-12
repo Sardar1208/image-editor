@@ -2,7 +2,7 @@ export const M_AdjustmentType = {
   Brightness: "brightness",
   Contrast: "contrast",
   Saturation: "saturation",
-  Shadow: "shadow",
+  Shadows: "shadows",
   Temperature: "temperature",
   Tint: "tint",
   Vibrance: "vibrance",

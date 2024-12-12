@@ -1,6 +1,7 @@
+use js_sys::Array;
 use log::debug;
 use std::cmp;
-use wasm_bindgen::prelude::wasm_bindgen;
+use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
 
 #[wasm_bindgen]
 pub fn greyscale_image(image_data: &mut [u8]) {
@@ -162,7 +163,8 @@ pub fn adjust_temperature(image_data: &mut [u8], temperature: f32) {
         let blue_adjustment = -temperature;
 
         pixel[0] = ((pixel[0] as f32 + red_adjustment).clamp(0.0, 255.0)) as u8; // Red channel
-        pixel[2] = ((pixel[2] as f32 + blue_adjustment).clamp(0.0, 255.0)) as u8; // Blue channel
+        pixel[2] = ((pixel[2] as f32 + blue_adjustment).clamp(0.0, 255.0)) as u8;
+        // Blue channel
     }
 }
 
@@ -171,7 +173,8 @@ pub fn adjust_tint(image_data: &mut [u8], tint: f32) {
     for pixel in image_data.chunks_exact_mut(4) {
         let green_adjustment = tint;
 
-        pixel[1] = ((pixel[1] as f32 + green_adjustment).clamp(0.0, 255.0)) as u8; // Green channel
+        pixel[1] = ((pixel[1] as f32 + green_adjustment).clamp(0.0, 255.0)) as u8;
+        // Green channel
     }
 }
 
@@ -210,6 +213,104 @@ pub fn adjust_highlights(image_data: &mut [u8], highlights: f32) {
             };
 
             pixel[i] = ((value * factor).clamp(0.0, 255.0)) as u8;
+        }
+    }
+}
+
+#[wasm_bindgen]
+pub fn batch_adjust(image_data: &mut [u8], sequence: &JsValue, values: &[f32]) {
+    let sequence = Array::from(sequence);
+
+    for pixel in image_data.chunks_exact_mut(4) {
+        for (idx, adjustment) in sequence.clone().iter().enumerate() {
+            let value = values[idx];
+            if let Some(string) = adjustment.as_string() {
+                match string.as_str() {
+                    "contrast" => {
+                        let contrast_factor =
+                            ((259.0) * (value + 255.0)) / (255.0 * (259.0 - value));
+
+                        for i in 0..3 {
+                            let value = pixel[i] as f32;
+                            let new_value = contrast_factor * (value - 128.0) + 128.0;
+                            // Clip to the 0–255 range and assign back to the pixel
+                            pixel[i] = cmp::max(0, cmp::min(255, new_value.round() as i16)) as u8;
+                        }
+                    }
+                    "saturation" => {
+                        let gray = 0.299 * (pixel[0] as f32)
+                            + 0.587 * (pixel[1] as f32)
+                            + 0.114 * (pixel[2] as f32);
+
+                        for i in 0..3 {
+                            let value = pixel[i] as f32;
+                            // Adjust the saturation by scaling the distance from gray
+                            let new_value = gray + (value - gray) * (1.0 + value);
+                            // Clip to the 0–255 range
+                            pixel[i] = new_value.clamp(0.0, 255.0).round() as u8;
+                        }
+                    }
+                    "shadows" => {
+                        for i in 0..3 {
+                            let value = pixel[i] as f32;
+
+                            // Brighten shadows for darker pixels
+                            let new_value = if value < 128.0 {
+                                (value + value * (128.0 - value)).clamp(0.0, 255.0)
+                            } else {
+                                value // Leave highlights unchanged
+                            };
+
+                            pixel[i] = new_value as u8;
+                        }
+                    }
+                    "temperature" => {
+                        let red_adjustment = value;
+                        let blue_adjustment = -value;
+
+                        pixel[0] = ((pixel[0] as f32 + red_adjustment).clamp(0.0, 255.0)) as u8; // Red channel
+                        pixel[2] = ((pixel[2] as f32 + blue_adjustment).clamp(0.0, 255.0)) as u8;
+                    }
+                    "tint" => {
+                        let green_adjustment = value;
+
+                        pixel[1] = ((pixel[1] as f32 + green_adjustment).clamp(0.0, 255.0)) as u8;
+
+                    }
+                    "vibrance" => {
+                        let r = pixel[0] as f32;
+                        let g = pixel[1] as f32;
+                        let b = pixel[2] as f32;
+
+                        // Calculate the maximum intensity
+                        let max = r.max(g).max(b);
+
+                        // Apply vibrance adjustment only to less saturated colors
+                        for i in 0..3 {
+                            let delta = max - pixel[i] as f32;
+                            if delta > 0.0 {
+                                let adjustment = delta * value / 255.0; // Scale adjustment
+                                pixel[i] = ((pixel[i] as f32 + adjustment).clamp(0.0, 255.0)) as u8;
+                            }
+                        }
+                    }
+                    "highlights" => {
+                        for i in 0..3 {
+                            let value = pixel[i] as f32;
+
+                            // Apply highlights adjustment only to bright pixels
+                            let factor = if value > 128.0 {
+                                1.0 + value / 100.0
+                            } else {
+                                1.0
+                            };
+
+                            pixel[i] = ((value * factor).clamp(0.0, 255.0)) as u8;
+                        }
+                    }
+                    _ => continue,
+                }
+            }
         }
     }
 }

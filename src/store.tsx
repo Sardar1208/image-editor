@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import imageReducer from "./reducers/imageReducer";
+import tuneImageReducer from "./reducers/tuneImageReducer";
 
-export default configureStore({
+const store = configureStore({
   reducer: {
-    imageReducer: imageReducer,
+    tuneImageReducer: tuneImageReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -12,3 +12,7 @@ export default configureStore({
       },
     }),
 });
+
+export default store;
+
+export type IRootState = ReturnType<typeof store.getState>

@@ -1,10 +1,10 @@
 import { useContext, useRef } from "react";
 import "./editor.css";
-import { CanvasContext, ImageContext } from "../App";
-import { drawImageToCanvas } from "../utils/utility_functions";
-import UploadButton from "./UploadButton";
-import ValueController from "./valueController";
-import { setOriginalImage } from "../utils/image_state_manager";
+import { CanvasContext, ImageContext } from "../../App";
+import { drawImageToCanvas } from "../../utils/utility_functions";
+import UploadButton from "../UploadButton";
+import ValueController from "../valueController";
+import { setOriginalImage } from "../../utils/image_state_manager";
 
 export default function Editor() {
 

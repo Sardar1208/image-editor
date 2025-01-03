@@ -1,7 +1,6 @@
 import { clearAdjustments } from "../reducers/tuneImageReducer";
 import store from "../store";
 import { ImageState } from "../types/T_ImageState";
-import { AdjustmentType } from "../types/T_ProcessTypes";
 
 function setCurrentImage(
   setState: React.Dispatch<React.SetStateAction<ImageState>>,
@@ -51,6 +50,7 @@ function setOriginalImage(
         imageElement: imageElement ?? state.originalImage?.imageElement,
         imageData: imageData ?? state.originalImage?.imageData,
       },
+      currentImage: state.currentImage,
       snapshots: state.snapshots,
     };
   });
@@ -64,99 +64,99 @@ function getImageDataforOP(state: ImageState) {
   }
 }
 
-function getAdjustmentSequence(
-  state: ImageState,
-  operation: AdjustmentType,
-  value: number
-) {
-  let lastValidIndex = state.snapshots.length;
-  let initialImageData: ImageData | undefined =
-    state.snapshots.length > 0
-      ? state.snapshots[state.snapshots.length - 1].imageData
-      : state.originalImage?.imageData;
-  let sequence: {
-    operation: AdjustmentType;
-    value: number;
-  }[] = [
-    {
-      operation: operation,
-      value: value,
-    },
-  ];
+// function getAdjustmentSequence(
+//   state: ImageState,
+//   operation: AdjustmentType,
+//   value: number
+// ) {
+//   let lastValidIndex = state.snapshots.length;
+//   let initialImageData: ImageData | undefined =
+//     state.snapshots.length > 0
+//       ? state.snapshots[state.snapshots.length - 1].imageData
+//       : state.originalImage?.imageData;
+//   const sequence: {
+//     operation: AdjustmentType;
+//     value: number;
+//   }[] = [
+//     {
+//       operation: operation,
+//       value: value,
+//     },
+//   ];
 
-  if (state.snapshots.length <= 0) {
-    return {
-      initialImageData,
-      sequence,
-    };
-  }
+//   if (state.snapshots.length <= 0) {
+//     return {
+//       initialImageData,
+//       sequence,
+//     };
+//   }
 
-  for (let i = 0; i < state.snapshots.length; i++) {
-    const item = state.snapshots[i];
-    if (item.operation == operation) {
-      lastValidIndex = i + 1;
-      initialImageData = item.imageData;
-      break;
-    }
-  }
+//   for (let i = 0; i < state.snapshots.length; i++) {
+//     const item = state.snapshots[i];
+//     if (item.operation == operation) {
+//       lastValidIndex = i + 1;
+//       initialImageData = item.imageData;
+//       break;
+//     }
+//   }
 
-  for (let i = lastValidIndex; i < state.snapshots.length; i++) {
-    const item = state.snapshots[i];
-    sequence.push({
-      operation: item.operation,
-      value: item.value,
-    });
-  }
+//   for (let i = lastValidIndex; i < state.snapshots.length; i++) {
+//     const item = state.snapshots[i];
+//     sequence.push({
+//       operation: item.operation,
+//       value: item.value,
+//     });
+//   }
 
-  return {
-    initialImageData,
-    sequence,
-  };
-}
+//   return {
+//     initialImageData,
+//     sequence,
+//   };
+// }
 
-function updateSnapshots(
-  setState: React.Dispatch<React.SetStateAction<ImageState>>,
-  operation: AdjustmentType,
-  value: number,
-  imageData: ImageData
-) {
-  setState((prevState) => {
-    for (let i = 0; i < prevState.snapshots.length; i++) {
-      const item = prevState.snapshots[i];
-      if (item.operation == operation) {
-        item.imageData = imageData;
-        item.value = value;
-        return prevState;
-      }
-    }
+// function updateSnapshots(
+//   setState: React.Dispatch<React.SetStateAction<ImageState>>,
+//   operation: AdjustmentType,
+//   value: number,
+//   imageData: ImageData
+// ) {
+//   setState((prevState) => {
+//     for (let i = 0; i < prevState.snapshots.length; i++) {
+//       const item = prevState.snapshots[i];
+//       if (item.operation == operation) {
+//         item.imageData = imageData;
+//         item.value = value;
+//         return prevState;
+//       }
+//     }
 
-    prevState.snapshots.push({
-      operation: operation,
-      value: value,
-      imageData: imageData,
-    });
+//     prevState.snapshots.push({
+//       operation: operation,
+//       value: value,
+//       imageData: imageData,
+//     });
 
-    return prevState;
-  });
-}
+//     return prevState;
+//   });
+// }
 
-function clearSnapshots(
-  setState: React.Dispatch<React.SetStateAction<ImageState>>
-) {
-  setState((state) => {
-    return {
-      originalImage: state.originalImage,
-      snapshots: [],
-    };
-  });
-}
+// function clearSnapshots(
+//   setState: React.Dispatch<React.SetStateAction<ImageState>>
+// ) {
+//   setState((state) => {
+//     return {
+//       originalImage: state.originalImage,
+//       snapshots: [],
+//     };
+//   });
+// }
 
 export {
   setOriginalImage,
   getImageDataforOP,
-  getAdjustmentSequence,
-  updateSnapshots,
-  clearSnapshots,
+  // getAdjustmentSequence,
+  // updateSnapshots,
+  // clearSnapshots,
   setCurrentImage,
   clearCurrentImage,
   applyCurrentImage,

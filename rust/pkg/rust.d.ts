@@ -56,6 +56,12 @@ export function adjust_vibrance(image_data: Uint8Array, vibrance: number): void;
  * @param {number} highlights
  */
 export function adjust_highlights(image_data: Uint8Array, highlights: number): void;
+/**
+ * @param {Uint8Array} image_data
+ * @param {any} sequence
+ * @param {Float32Array} values
+ */
+export function batch_adjust(image_data: Uint8Array, sequence: any, values: Float32Array): void;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
@@ -72,7 +78,9 @@ export interface InitOutput {
   readonly adjust_tint: (a: number, b: number, c: number, d: number) => void;
   readonly adjust_vibrance: (a: number, b: number, c: number, d: number) => void;
   readonly adjust_highlights: (a: number, b: number, c: number, d: number) => void;
+  readonly batch_adjust: (a: number, b: number, c: number, d: number, e: number, f: number) => void;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
+  readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;
 }
 
 export type SyncInitInput = BufferSource | WebAssembly.Module;

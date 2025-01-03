@@ -3,9 +3,9 @@ import { MdTune } from "react-icons/md";
 import { IoColorFilterOutline } from "react-icons/io5";
 import { CiFilter } from "react-icons/ci";
 import Tabs from "./Tabs";
-import TuneImageScreen from "../screens/TuneImage";
-import FiltersScreen from "../screens/Filters";
-import EffectsScreen from "../screens/Effects";
+import TuneImageScreen from "../../screens/TuneImageScreen";
+import FiltersScreen from "../../screens/FiltersScreen";
+import EffectsScreen from "../../screens/EffectsScreen";
 
 
 export default function ControlPanel() {

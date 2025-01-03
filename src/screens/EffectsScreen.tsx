@@ -1,8 +1,8 @@
 import { useContext } from "react";
 import { CanvasContext, ImageContext } from "../App";
-import { useWorker } from "../effects/image_adjustments";
+import { useWorker } from "../processes/tune_image_processor";
 import EffectTile from "../components/EffectTile";
-import gaussianBlur from "../effects/gaussianBlur";
+import gaussianBlur from "../processes/gaussianBlur";
 
 
 function EffectsScreen() {

@@ -1,10 +1,10 @@
 import { useContext, useRef } from "react";
 import "./editor.css";
-import { CanvasContext, ImageContext } from "../App";
-import { drawImageToCanvas } from "../utils/utility_functions";
-import UploadButton from "./UploadButton";
-import ValueController from "./valueController";
-import { setOriginalImage } from "../utils/image_state_manager";
+import { CanvasContext, ImageContext } from "../../App";
+import { drawImageToCanvas } from "../../utils/utility_functions";
+import UploadButton from "../UploadButton";
+import ValueController from "../valueController";
+import { setOriginalImage } from "../../utils/image_state_manager";
 
 export default function Editor() {
 
@@ -52,7 +52,7 @@ export default function Editor() {
                 <span style={{ fontSize: "25px", marginBottom: "10px" }}>Select an image and start editing</span>
                 <UploadButton onImageSelect={onImageSelect} />
             </div> : (
-                <div style={{ border: "5px solid red", width: "100%", height: "90%", margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }} ref={editorRef}>
+                <div style={{ border: "0px solid red", width: "100%", height: "90%", margin: "20px", display: "flex", justifyContent: "center", alignItems: "center" }} ref={editorRef}>
                     <canvas ref={canvasRef} style={{
                         border: "2px solid #000",
                     }}>

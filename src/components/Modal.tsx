@@ -22,28 +22,12 @@ const Modal = ({ closeModal, onApply }: ModalInterface) => {
           <div style={modalStyles.buttons}>
             <button
               style={modalStyles.cancelButton}
-              onMouseOver={(e) =>
-                (e.target.style.backgroundColor =
-                  modalStyles.cancelButtonHover.backgroundColor)
-              }
-              onMouseOut={(e) =>
-                (e.target.style.backgroundColor =
-                  modalStyles.cancelButton.backgroundColor)
-              }
               onClick={closeModal}
             >
               Cancel
             </button>
             <button
               style={modalStyles.applyButton}
-              onMouseOver={(e) =>
-                (e.target.style.backgroundColor =
-                  modalStyles.applyButtonHover.backgroundColor)
-              }
-              onMouseOut={(e) =>
-                (e.target.style.backgroundColor =
-                  modalStyles.applyButton.backgroundColor)
-              }
               onClick={applyChanges}
             >
               Apply
@@ -55,18 +39,18 @@ const Modal = ({ closeModal, onApply }: ModalInterface) => {
   );
 };
 
-const modalStyles = {
+const modalStyles: Record<string, React.CSSProperties> = {
   overlay: {
-    position: "fixed",
-    top: "0px",
-    left: "0px",
+    position: 'fixed',
+    top: 0,
+    left: 0,
     width: "100%",
     height: "100%",
     background: "rgba(0, 0, 0, 0.5)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    zIndex: "1000",
+    zIndex: 1000,
   },
   container: {
     background: "black",

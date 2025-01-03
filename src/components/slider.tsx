@@ -118,15 +118,12 @@ function PropertyWithSlider({
       const newValue = Math.round(min + percentage * (max - min));
       setValue(newValue);
       onUpdate(newValue);
-      onChangeCommitted(newValue);
+      onChangeCommitted();
     },
     [min, max, onUpdate, onChangeCommitted]
   );
 
   const percentage = ((value - min) / (max - min)) * 100;
-
-  // Generate divisions based on the min and max range
-  const divisions = Array.from({ length: max - min + 1 }, (_, i) => min + i);
 
   return (
     <div>

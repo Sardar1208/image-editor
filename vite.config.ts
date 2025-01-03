@@ -16,4 +16,9 @@ export default defineConfig({
       '@wasm': './rust/pkg',
     },
   },
+  esbuild: {
+    loader: "tsx",
+    include: /src\/.*\.[tj]sx?$/,
+    exclude: /node_modules/,
+  },
 })

@@ -8,7 +8,7 @@
 .main_grid {
   background-color: #1f1f1f;
   display: grid;
-  grid-template-columns: 70% 25%;
+  grid-template-columns: 65% 30%;
   gap: 5%;
   flex: 1;
   height: 100%;
